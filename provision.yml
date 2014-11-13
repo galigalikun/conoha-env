@@ -1,0 +1,21 @@
+---
+# phalcon playbook
+
+- hosts: all
+  user: "{{ work_user }}"
+  sudo: true
+  roles:
+     - role: common
+
+- hosts: web
+  user: "{{ work_user }}"
+  sudo: true
+  roles:
+    - role: web
+
+
+- hosts: database
+  user: "{{ work_user }}"
+  sudo: true
+  roles:
+    - role: database

@@ -1,0 +1,49 @@
+---
+- name: install nginx
+  apt: name={{ item }} state=present 
+  with_items:
+    - nginx
+    - libpcre3-dev
+    - php5-dev
+    - php5-mysql
+    - php5-fpm
+
+- name: git phalcon
+  git:
+    repo: git://github.com/phalcon/cphalcon.git
+    dest: /tmp/cphalcon
+    version: master
+    accept_hostkey: yes
+
+- name: install phalcon
+  shell: cd /tmp/cphalcon/build && ./install
+
+
+- name: copy phalcon.ini
+  template: src=phalcon.ini dest={{ item }}
+  with_items:
+    - /etc/php5/cli/conf.d/20-phalcon.ini
+    - /etc/php5/fpm/conf.d/20-phalcon.ini
+
+- name: copy xperia nginx
+  template: src=xperia dest=/etc/nginx/sites-available/xperia
+  notify:
+    - restart nginx
+
+- name: link xperia
+  file: src=/etc/nginx/sites-available/xperia dest=/etc/nginx/sites-enabled/xperia state=link
+  notify:
+    - restart nginx
+
+- name: mkdir www
+  file:
+    path: /usr/share/nginx/www
+    state: directory
+    owner: "{{ work_user }}"
+
+
+- name: restart php-fpm
+  action: service name=php5-fpm state=started
+  
+- name: restart Nginx
+  action: service name=nginx state=started
