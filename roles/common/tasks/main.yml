@@ -13,6 +13,7 @@
     - gcc
     - autoconf
     - curl
+    - zsh
 
 - name: mackerel
   shell: curl -fsSL https://mackerel.io/assets/files/scripts/setup-apt.sh | sh
@@ -27,6 +28,7 @@
   apt: name={{ item }} state=present update_cache=yes
   with_items:
     - mackerel-agent
+    - mackerel-agent-plugins
 
 - name: copy mackerel.conf
   template: src=mackerel-agent.conf dest=/etc/mackerel-agent/mackerel-agent.conf
@@ -54,3 +56,12 @@
 - name: vimrc
   file: src={{ dotfiles }}/home/.vim dest=~/.vim state=link
   sudo: no
+
+- name: zsh
+  file: src={{ dotfiles }}/home/.zshrc dest=~/.zshrc state=link
+  sudo: no
+
+- name: user shell zsh
+  user: name="{{ work_user }}" shell=/bin/zsh
+
+
