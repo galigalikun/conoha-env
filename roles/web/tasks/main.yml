@@ -1,0 +1,10 @@
+---
+
+- name: html file mkdir
+  file: path=/var/www state=directory
+
+- name: html file
+  copy: src={{ item }} dest=/var/www/
+  with_items:
+    - googleeb7851b54219f0c4.html
+    - vaddy-86e9749fc0ea8a0.html

@@ -4,11 +4,12 @@
 - hosts: all
   user: root
   roles:
-     - role: common
+     - common
 
 - hosts: docker
   user: root
   roles:
-    - role: docker
+    - docker
+    - web
 
 
