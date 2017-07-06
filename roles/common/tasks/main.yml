@@ -5,8 +5,11 @@
     - vim
     - curl
 
-- name: mackerel
-  shell: curl -fsSL https://mackerel.io/assets/files/scripts/setup-apt.sh | sh
+- name: mackerel get
+  get_url: url=https://mackerel.io/assets/files/scripts/setup-apt.sh dest=/usr/local/src mode=755
+
+- name: mackerel install
+  command: /usr/local/src/setup-apt.sh
 
 - name: updates a server
   apt: update_cache=yes
