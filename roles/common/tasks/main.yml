@@ -1,19 +1,9 @@
 ---
-- name: ssh key
-  authorized_key:
-    user: "{{ work_user }}"
-    key: "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDLAVrEY99HQJLJu6AH93j+5SsYiYI1Ngy+VX2MRNFMdaq9fiSZLpsvD6YqzPoJygCcr8k5qfSogix54Z73k10CJ5iDrPl0Y31e6KBJGXEZmVc3E6FPRckcqr7sb9B5QIxqE3doyOsTN8y1R3XWJ7eRDmn10lxEM0AY09SxGQ/Gi2UX0lALpqorv4dHAHx0Xo78T5719UAuXEaWxuexUKn5AP2u2DUveRjEEn2uMClo1cGVhCTQZPQ4KIr4C4sCgzp/sUsNGzurgXVQJS/ajLIyxBuYwWE5B6gnrGwm0wvlIfvWXlBtQQXk5EgDDYeGT5aqJsD7EoNygcKGXWDQJ537"
-  
 - name: common install
   apt: name={{ item }} state=present update_cache=yes
   with_items:
     - vim
-    - unzip
-    - git-core
-    - gcc
-    - autoconf
     - curl
-    - zsh
 
 - name: mackerel
   shell: curl -fsSL https://mackerel.io/assets/files/scripts/setup-apt.sh | sh
@@ -31,37 +21,10 @@
     - mackerel-agent-plugins
 
 - name: copy mackerel.conf
-  template: src=mackerel-agent.conf dest=/etc/mackerel-agent/mackerel-agent.conf
+  template: src=mackerel-agent.conf.j2 dest=/etc/mackerel-agent/mackerel-agent.conf
+  notify:
+    - restart mackerel
 
 - name: start mackerel
   action: service name=mackerel-agent state=started
-
-- name: dotfiles
-  git:
-    repo: git://github.com/galigalikun/dotfiles.git
-    dest: "{{ dotfiles }}"
-    version: master
-#    track_submodules: yes
-    accept_hostkey: yes
-  sudo: no
-
-- name: dotfiles submodule
-  command: git submodule update --init --recursive chdir={{ dotfiles }}
-  sudo: no
-
-- name: vimrc
-  file: src={{ dotfiles }}/home/.vimrc dest=~/.vimrc state=link
-  sudo: no
-
-- name: vimrc
-  file: src={{ dotfiles }}/home/.vim dest=~/.vim state=link
-  sudo: no
-
-- name: zsh
-  file: src={{ dotfiles }}/home/.zshrc dest=~/.zshrc state=link
-  sudo: no
-
-- name: user shell zsh
-  user: name="{{ work_user }}" shell=/bin/zsh
-
 

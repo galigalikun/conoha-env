@@ -1,0 +1,22 @@
+---
+- name: install docker
+  apt: name={{ item }} state=present
+  with_items:
+    - docker
+
+- name: serveice docker
+  action: service name=docker state=started
+
+- name: copy tls
+  copy: src={{ item }} dest=/var/docker/
+  with_items:
+    - ca.pem
+    - server-cert.pem
+    - server-key.pem
+  notify:
+    - restart docker
+
+- name: copy docker.service
+  template: src=docker.service.j2 dest=/lib/systemd/system/docker.service
+  notify:
+    - restart docker

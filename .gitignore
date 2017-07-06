@@ -1,0 +1,6 @@
+### https://raw.github.com/github/gitignore/30e75b6caa9e95bc0f8c6edaccbed51a71efbd8d/Global/Ansible.gitignore
+
+*.retry
+
+server-key.pem
+

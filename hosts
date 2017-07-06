@@ -1,9 +1,7 @@
 [all]
 dev.xperia.biz
 
-[web]
+[docker]
 dev.xperia.biz
 
-[database]
-dev.xperia.biz
 
