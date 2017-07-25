@@ -1,3 +1,6 @@
 ---
 - name: restart docker
   service: name=docker state=restarted
+
+- name: restart mackerel
+  service: name=mackerel-agent state=restarted
